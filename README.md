@@ -6,25 +6,23 @@
 - Schüler
 - Zeit
 - Fach
-- Vortrag/Stunde
 
 ## Raum:
 - ID
 - Name/Beschreibung
-- Raumtypen # generic, labor, küche, büro
-- Raumgröße/Anzahl der Plätze # 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-- Raumbelegung # Wann er frei oder belegt ist (array mit von bis zeiten) ["xx:xx-xx:xx"]
+- Raumtypen (generisch, labor, küche, büro)
+- Raumgröße/Anzahl der Plätze
+- Raumbelegung (["xx:xx-xx:xx"])
 
 ## Zeit:
 - Zusätzliche Zeit zwischen den Stunden (laufen, pause, lüften, besprechen)
-- Lehrer/Schüler benötigen Pausen wenn es passt (oder zu einer festgeleten uhrzeit)
+- Lehrer/Schüler benötigen Pausen wenn es passt (oder zu einer festgeleten Uhrzeit)
 
 ## Lehrer:
 - Name
-- Typ # Lehrer, Dozent, Dozentin
+- Typ (Lehrer, Dozent, externer Mitarbeiter)
 - Fächer
-- Krankmeldungen
-- Verfügbarkeit 
+- Verfügbarkeit
 
 ## Schüler:
 - Name
@@ -40,7 +38,7 @@
 - Fach kann nur in bestimmten Raum stattfinden
 - Fächer sollen in der Woche in einer bestimmten Reihenfolge sein
 - Zeit zwischen den Stunden minimieren
-- Laufen zwischen verschiedenen Räum-(komplexen) verringern
+- Laufen zwischen verschiedenen Räumen/Einrichtungen verringern
 
 ## Algorithmus 
 Ein metaheuristischer evolutionärer Algorithmus für die Erstellung von Stundenplänen
