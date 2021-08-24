@@ -43,7 +43,8 @@
 - Laufen zwischen verschiedenen Räum-(komplexen) verringern
 
 ## Algorithmus 
-Ein metaheuristischer evolutionärer Algorithmus
+Ein metaheuristischer evolutionärer Algorithmus für die Erstellung von Stundenplänen
+
 Variablen (G = Generations, P = Population, T = Stop Threshold, S = Selection percentage, M = Mutation probability)
 
 - Lädt alle Ressourcen
