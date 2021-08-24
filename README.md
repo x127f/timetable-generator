@@ -42,23 +42,26 @@
 - Zeit zwischen den Stunden minimieren
 - Laufen zwischen verschiedenen Räum-(komplexen) verringern
 
-## (Evolutionärer) Algorithmus (N = Generationen, M = Population, T = Stop Threshold)
+## Algorithmus 
+Ein metaheuristischer evolutionärer Algorithmus
+Variablen (G = Generations, P = Population, T = Stop Threshold, S = Selection percentage, M = Mutation probability)
+
 - Lädt alle Ressourcen
 - Lädt alle Regeln und sortiert nach Priorität
 - Wiederholen bis nach T Durchläufen keine Verbesserung der Leistung festgestellt wird oder der Nutzer davor stoppt
-	- N mal wiederholen:
-		- M mal wiederholen:
-			- Startet mit einer zufälligen Tabelle (oder übernimmt Teile des vorherigen Durchlaufes)
+	- G mal wiederholen:
+		- P mal wiederholen:
+			- Startet mit einer zufälligen Tabelle oder übernimmt eine des vorherigen Durchlaufes
 			- Weißt diesem Durchlauf die Leistung 0 zu
 			- Führt jede Regeln für jede Ressource aus
 				- Wenn die Regel erfüllt ist wird deren Priorität zur Leistung addiert
 				- Wenn die Regel verletzt ist wird deren Priorität von der Leistung subtrahiert
 				- Wenn die Regel verletzt ist und sie zwingend erforderlich ist wird die Leistung auf 0 gesetzt und dieser Durchlauf beendet
 		- Speichert und sortiert die Ergebnisse nach der Leistung der Durchläufe
-		- Selektion
-		- Rekombination
-		- Mutation
-		- Population
+		- Selektion (S Prozent der besten Durchläufe werden ausgewählt)
+		- Rekombination (Für jeweils zwei der selektierten Durchläufe werden einige Einträge vertauscht)
+		- Mutation (Mit einer Wahrscheinlichkeit von M werden einige Einträge vertauscht)
+		- Population (Zusätzlich werden 100% - S an zufällig generierten Tabellen aufgefüllt)
 
 
 ## Schema:
