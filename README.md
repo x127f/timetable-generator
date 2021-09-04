@@ -1,71 +1,78 @@
+## Resources (for a lecture):
 
-## Ressourcen (für eine Stunde/Vortrag):
-- Raum
-- Lehrer
-- Klasse
-- Schüler
-- Zeit
-- Fach
+-   Room
+-   Teacher
+-   Class
+-   Pupil
+-   Time
+-   Subject
 
-## Raum:
-- ID
-- Name/Beschreibung
-- Raumtypen (generisch, labor, küche, büro)
-- Raumgröße/Anzahl der Plätze
-- Raumbelegung (["xx:xx-xx:xx"])
+## Room:
 
-## Zeit:
-- Zusätzliche Zeit zwischen den Stunden (laufen, pause, lüften, besprechen)
-- Lehrer/Schüler benötigen Pausen wenn es passt (oder zu einer festgeleten Uhrzeit)
+-   ID
+-   Name/description
+-   Room types (generic, laboratory, kitchen, office)
+-   Room size/number of places
+-   Room occupancy (["xx: xx-xx: xx"])
 
-## Lehrer:
-- Name
-- Typ (Lehrer, Dozent, externer Mitarbeiter)
-- Fächer
-- Verfügbarkeit
+## Time:
 
-## Schüler:
-- Name
-- Klassen/Kurse
+-   Additional time between the hours (switching room, break, ventilation, discussions)
+-   Teachers/students need breaks when it is convenient (or at a fixed time)
 
-## Aktion/Abfrage:
-- Ist Ressource frei? (Lehrer, Raum, Klasse) für Zeitraum
-- Setze/Gib Priorität
-- Setze Hard/Soft constraint
+## Teacher:
 
-## Beispiel Regeln:
-- Lehrer + Klasse + Schüler kann nur in einen Raum zur gleichen Zeit sein
-- Fach kann nur in bestimmten Raum stattfinden
-- Fächer sollen in der Woche in einer bestimmten Reihenfolge sein
-- Zeit zwischen den Stunden minimieren
-- Laufen zwischen verschiedenen Räumen/Einrichtungen verringern
+-   Name
+-   Type (teacher, professor, external employee)
+-   Subjects
+-   Availability
 
-## Algorithmus 
-Ein metaheuristischer evolutionärer Algorithmus für die Erstellung von Stundenplänen
+## Pupils:
 
-Variablen (G = Generations, P = Population, T = Stop Threshold, S = Selection percentage, M = Mutation probability)
+-   Name
+-   classes/courses
 
-- Lädt alle Ressourcen
-- Lädt alle Regeln und sortiert nach Priorität
-- Wiederholen bis nach T Durchläufen keine Verbesserung der Leistung festgestellt wird oder der Nutzer davor stoppt
-	- G mal wiederholen:
-		- P mal wiederholen:
-			- Startet mit einer zufälligen Tabelle oder übernimmt eine des vorherigen Durchlaufes
-			- Weißt diesem Durchlauf die Leistung 0 zu
-			- Führt jede Regeln für jede Ressource aus
-				- Wenn die Regel erfüllt ist wird deren Priorität zur Leistung addiert
-				- Wenn die Regel verletzt ist wird deren Priorität von der Leistung subtrahiert
-				- Wenn die Regel verletzt ist und sie zwingend erforderlich ist wird die Leistung auf 0 gesetzt und dieser Durchlauf beendet
-		- Speichert und sortiert die Ergebnisse nach der Leistung der Durchläufe
-		- Selektion (S Prozent der besten Durchläufe werden ausgewählt)
-		- Rekombination (Für jeweils zwei der selektierten Durchläufe werden einige Einträge vertauscht)
-		- Mutation (Mit einer Wahrscheinlichkeit von M werden einige Einträge vertauscht)
-		- Population (Zusätzlich werden 100% - S an zufällig generierten Tabellen aufgefüllt)
+## Action/query:
 
+-   Is the resource free? (Teacher, room, class) for a period
+-   Set/give priority
+-   Set hard/soft constraint
+
+## Example rules:
+
+-   Teacher + class + student can only be in one room at the same time
+-   Subject can only take place in a certain room
+-   Subjects should be in a certain order during the week
+-   Minimize time between the hours
+-   Reduce walking time between different rooms/facilities
+
+## Algorithm
+
+A metaheuristic evolutionary algorithm for creating timetables
+
+Variables (G = Generations, P = Population, T = Stop Threshold, S = Selection percentage, M = Mutation probability)
+
+-   Loads all resources
+-   Loads all rules and sorts them by priority
+-   Repeat until no improvement in performance is found after T runs or the user manually stops
+    -   Repeat G times:
+        -   Repeat P times:
+            -   Starts with a random table or takes the one of the previous run
+            -   Assigns performance 0 to this run
+            -   Execute every rule for every resource
+                -   If the rule is fulfilled, its priority is added to the performance
+                -   If the rule is violated, its priority is subtracted from the service
+                -   If the rule is violated and it is absolutely necessary, the service is set to 0 and this cycle is ended
+    -   Saves and sorts the results according to the performance of the runs
+    -   Selection (S percent of the best runs are selected)
+    -   Recombination (some entries are swapped for two of the selected runs)
+    -   Mutation (some entries are swapped with a probability of M)
+    -   Population (100% - S are also filled in randomly generated tables)
 
 ## Schema:
+
 ```json
-  [
+[
 	{
 		"and": [
 			{
