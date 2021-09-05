@@ -3,7 +3,7 @@
 -   Room
 -   Teacher
 -   Class
--   Pupil
+-   Student
 -   Time
 -   Subject
 
@@ -27,7 +27,7 @@
 -   Subjects
 -   Availability
 
-## Pupils:
+## Students:
 
 -   Name
 -   classes/courses
