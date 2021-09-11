@@ -1,13 +1,13 @@
-import { id, Lecture, Operator, Resource, Rule } from "./types";
+import { id, Lecture, Operator, Resource, Rule, Time } from "./types";
 import { processData } from "./processor";
 
 const rooms = new Map<id, Resource>();
-([{ id: "1", userDefinedProperties: { size: 10 } }] as Resource[]).forEach((x) => {
+([{ id: "0", properties: { size: 10 } }] as Resource[]).forEach((x) => {
 	rooms.set(x.id, x);
 });
 
 const persons = new Map<id, Resource>();
-([{ id: "samuel scheit" }] as Resource[]).forEach((x) => {
+([{ id: "s" }] as Resource[]).forEach((x) => {
 	persons.set(x.id, x);
 });
 
@@ -16,8 +16,24 @@ const subjects = new Map<id, Resource>();
 	subjects.set(x.id, x);
 });
 
+const times = new Map<id, Time>();
+([{ from: new Date().setHours(8, 0), to: new Date().setHours(9, 0), id: "1" }] as Time[]).forEach((x) => {
+	if (!x.id) return;
+	times.set(x.id, x);
+});
+
 const lectures = new Map<id, Lecture>();
-([{ id: "0" }] as Lecture[]).forEach((x) => {
+(
+	[
+		{
+			id: "0",
+			rooms: [rooms.get("0")],
+			classes: [persons.get("s")],
+			times: [times.get("1")],
+			subjects: [subjects.get("mathe")],
+		},
+	] as Lecture[]
+).forEach((x) => {
 	lectures.set(x.id, x);
 });
 
@@ -64,4 +80,4 @@ const rules: Rule[] = [
 
 processData(Array.from(lectures.values()), rules);
 
-console.log(JSON.stringify(lectures.values()));
+console.log(JSON.stringify(Array.from(lectures.values())));

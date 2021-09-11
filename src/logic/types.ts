@@ -1,10 +1,24 @@
-// require("assemblyscript/std/portable");
-// The entry file of your WebAssembly module.
+/*
+* Properties
+Subject
+Room
+Time
+Person
+
+
+Presets:
+person type (teacher, pupil)
+work hours per week/day
+teacher/pupil previous lecture.room.id == lecture.room.id
+
+*/
 
 export enum Operator {
-	// LOGICAL:
 	EQUALS,
 	NOT,
+	STARTS_WITH,
+	ENDS_WITH,
+	CONTAINS,
 	GREATER_THAN,
 	GREATER_EQUALS_THAN,
 	LESS_THAN,
@@ -20,22 +34,11 @@ export enum Operator {
 }
 
 export type Literal = number | string | symbol | boolean | bigint;
-export type Literal2 = {
-	number: number;
-	string: string;
-	symbol: symbol;
-	boolean: boolean;
-	bigint: bigint;
-};
-
 export type Statement = Rule | Literal | Statement[];
-export type Statement2 = {
-	rule: Rule;
-	literal: Literal;
-	statements: Statement2[];
-};
 
 export type Rule = {
+	id?: string | number;
+	description?: string;
 	operation: Operator;
 	input?: Statement;
 	// default action: if rule passes add to performance, if not subtract it
@@ -44,13 +47,14 @@ export type Rule = {
 };
 
 export type Lecture = Omit<Resource, "constraints">;
-
 export type id = string;
 
 export interface Resource extends Constraints {
 	id: id;
+	description?: string;
 	constraints: Constraints;
-	userDefinedProperties?: any;
+	properties?: any;
+	runtime?: any;
 }
 
 export interface Constraints {
@@ -61,7 +65,8 @@ export interface Constraints {
 }
 
 export interface Time {
-	description?: string;
-	from: Date;
-	till: Date;
+	id?: string;
+	from: Date | number;
+	to: Date | number;
+	repeat: number; // number of days it should repeat: e.g. 1 = every day, 7 = every week, 28 = one week
 }

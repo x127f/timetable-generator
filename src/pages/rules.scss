@@ -1,0 +1,89 @@
+@import "../index.scss";
+
+.rule {
+	padding: 0.5rem;
+	border-radius: 10px;
+
+	.content {
+		border-left: 0.1rem solid transparent;
+		> div {
+			display: flex;
+			justify-content: space-between;
+		}
+	}
+
+	&.group {
+		background: #d1d1d12f;
+
+		.type .MuiInput-input {
+			padding-left: 0.5rem;
+		}
+
+		&.AND {
+			--color: #ebf2ff;
+			--border: #749efa;
+		}
+
+		&.OR {
+			--color: #9fe49396;
+			--border: #a9fda9;
+		}
+
+		> span .MuiSelect-root {
+			background: var(--color);
+		}
+
+		> .content {
+			border-left-color: var(--border);
+		}
+	}
+}
+
+.rules {
+	.addRule {
+		margin-top: 1rem;
+	}
+
+	.list {
+		padding: 0;
+		list-style: none;
+
+		.entry {
+			display: flex;
+			flex-direction: row;
+			left: 16px !important;
+			// padding: 1rem 0;
+
+			.counter {
+				display: flex;
+				align-items: center;
+				margin-right: 1rem;
+
+				.index {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					border-radius: 50%;
+					border: 1px solid #000000;
+					color: #000000;
+					height: 23px;
+					width: 23px;
+					font-weight: 400;
+					font-size: 0.8rem;
+				}
+			}
+
+			.rule {
+				flex-grow: 1;
+			}
+		}
+	}
+}
+
+.overline .MuiNativeSelect-root {
+	font-size: 1rem;
+	font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+	font-weight: 400;
+	letter-spacing: 0.08333em;
+	text-transform: uppercase;
+}
