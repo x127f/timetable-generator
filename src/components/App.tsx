@@ -1,7 +1,6 @@
 import { CircularProgress, Container } from "@material-ui/core";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Home from "../pages/Home";
 import Rules from "../pages/Rules";
 
 export default function App() {

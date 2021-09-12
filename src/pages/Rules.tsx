@@ -1,16 +1,35 @@
-import { Box, Button, ButtonGroup, Input, InputLabel, ListItem, MenuItem, Select, Typography } from "@material-ui/core";
+import {
+	Box,
+	Button,
+	ButtonGroup,
+	InputLabel,
+	Dialog,
+	MenuItem,
+	Select,
+	Typography,
+	DialogTitle,
+	DialogContent,
+	DialogContentText,
+	TextField,
+	DialogActions,
+	IconButton,
+} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import QueueIcon from "@material-ui/icons/Queue";
 import { ReactNode, useState } from "react";
 import { Operator, Rule, Statement } from "../logic/types";
 import "./rules.scss";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Store } from "../components/Store";
+import NoteIcon from "@material-ui/icons/Note";
+import useForceUpdate from "../util/useForceUpdate";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 export default function Rules() {
-	const [rules, setRules] = useState<Rule[]>([
-		{ operation: Operator.AND, input: [{ operation: Operator.GET, input: "test" }] },
-		{ operation: Operator.OR, input: [{ operation: Operator.GET, input: "test" }] },
-	]);
+	const rules = Store.use((s) => s.rules) as Rule[];
+	console.log(rules);
+	// @ts-ignore
+	globalThis.rules = rules;
 
 	function onDragEnd(result: any) {
 		const { destination, source } = result;
@@ -18,11 +37,8 @@ export default function Rules() {
 		if (!destination) return;
 		if (destination.droppableId == source.droppableId && destination.index == source.index) return;
 
-		const r = [...rules];
-		r.splice(source.index, 1);
-		r.splice(destination.index, 0, rules[source.index]);
-
-		setRules(r);
+		rules.splice(source.index, 1);
+		rules.splice(destination.index, 0, rules[source.index]);
 	}
 
 	function getStyle(style: any = {}) {
@@ -31,7 +47,7 @@ export default function Rules() {
 			transform: style.transform
 				? "translate(0px" + style.transform.slice(style.transform.indexOf(","), style.transform.length)
 				: "",
-			top: (style.top as number) - 17,
+			top: (style.top as number) - 17 || 0,
 		};
 	}
 
@@ -62,7 +78,7 @@ export default function Rules() {
 											<div className="counter">
 												<span className="index">{index + 1}</span>
 											</div>
-											{RenderStatement(item)}
+											{RenderStatement(item, rules)}
 										</div>
 									)}
 								</Draggable>
@@ -73,8 +89,11 @@ export default function Rules() {
 				</Droppable>
 			</DragDropContext>
 			<ButtonGroup variant="contained" color="primary" className="addRule">
-				<Button startIcon={<AddIcon />}>Add Rule</Button>
+				<Button onClick={() => rules.push({ operation: Operator.AND })} startIcon={<AddIcon />}>
+					Add Rule
+				</Button>
 				<Button startIcon={<QueueIcon />}>Add Group</Button>
+				<Button startIcon={<NoteIcon />}>Preset</Button>
 			</ButtonGroup>
 		</Box>
 	);
@@ -83,18 +102,15 @@ export default function Rules() {
 // @ts-ignore
 globalThis.Operator = Operator;
 
-export function useForceUpdate() {
-	var [, setTick] = useState(0);
-	return () => {
-		setTick((tick) => tick + 1);
-	};
-}
-
-export function RenderStatement(stmt?: Statement): ReactNode {
+export function RenderStatement(stmt?: Statement, parent?: Statement[]): ReactNode {
+	const rules = Store.use((s) => s.rules) as Rule[];
+	const properties = Store.use((s) => s.properties) as string[];
 	const forceUpdate = useForceUpdate();
+	const [isDialogOpen, toggleDialog] = useState(false);
+	const [propertyName, setPropertyName] = useState("");
 
 	if (!stmt) return <></>;
-	if (Array.isArray(stmt)) return stmt.map(RenderStatement);
+	if (Array.isArray(stmt)) return stmt.map((x) => RenderStatement(x, stmt));
 	if (["number", "string", "boolean", "bigint", "symbol"].includes(typeof stmt)) return <>{stmt}</>;
 
 	const rule = stmt as Rule;
@@ -102,6 +118,22 @@ export function RenderStatement(stmt?: Statement): ReactNode {
 	const AND = rule.operation === Operator.AND;
 	const GET = rule.operation === Operator.GET;
 	const OR = rule.operation === Operator.OR;
+
+	const DeleteButton = () => (
+		<IconButton
+			onClick={() => {
+				if (parent) {
+					parent.splice(
+						parent.findIndex((x) => x === stmt),
+						1
+					);
+				}
+			}}
+			style={{ marginLeft: "auto" }}
+		>
+			<DeleteIcon />
+		</IconButton>
+	);
 
 	const content = (
 		<Box className="content">
@@ -113,7 +145,7 @@ export function RenderStatement(stmt?: Statement): ReactNode {
 	if (AND || OR) {
 		return (
 			<Box className={"group rule " + operation}>
-				<Typography variant="overline" component="span">
+				<Typography variant="overline" component="span" style={{ display: "flex" }}>
 					<Select
 						className="type"
 						value={rule.operation}
@@ -126,9 +158,10 @@ export function RenderStatement(stmt?: Statement): ReactNode {
 						<MenuItem value={Operator.OR}>Mindestens eine</MenuItem>
 					</Select>
 					<span style={{ fontSize: "1rem", paddingLeft: "0.5rem" }}>
-						{AND && "Regeln sind erfüllt"}
-						{OR && "Regel ist erfüllt"}
+						{AND && "Bedingungen sind erfüllt"}
+						{OR && "Bedingung ist erfüllt"}
 					</span>
+					<DeleteButton />
 				</Typography>
 				{content}
 			</Box>
@@ -141,21 +174,58 @@ export function RenderStatement(stmt?: Statement): ReactNode {
 				<div>
 					<InputLabel>Eigenschaft</InputLabel>
 					<Select
-						open={true}
 						value={rule.input}
 						onChange={(e) => {
-							console.log("property", e.target.value);
+							if (!e.target.value) return;
+							console.log("property", e.target.value, e);
 							rule.input = e.target.value as string;
 							forceUpdate();
 						}}
 					>
-						<MenuItem value="test">test</MenuItem>
-						<MenuItem>
-							<Button color="primary" variant="contained">
+						{properties.map((x: any) => (
+							<MenuItem value={x}>{x}</MenuItem>
+						))}
+
+						<MenuItem value="">
+							<Button onClick={() => toggleDialog(true)} color="primary" variant="contained">
 								Eigenschaft hinzufügen
 							</Button>
 						</MenuItem>
 					</Select>
+					<Dialog open={isDialogOpen} onClose={() => toggleDialog(false)}>
+						<DialogTitle>Eigenschaft hinzufügen</DialogTitle>
+						<DialogContent>
+							<DialogContentText>Gib der Eigenschaft einen Namen:</DialogContentText>
+							<TextField
+								onChange={(e) => setPropertyName(e.target.value)}
+								placeholder="z.B. wochenstunden"
+								autoFocus
+								label="Eigenschaft Name"
+								type="text"
+								fullWidth
+								InputLabelProps={{
+									shrink: true,
+								}}
+							/>
+						</DialogContent>
+						<DialogActions>
+							<Button onClick={() => toggleDialog(false)} color="primary">
+								Abbrechen
+							</Button>
+							<Button
+								variant="contained"
+								onClick={() => {
+									rule.input = propertyName;
+									properties.push(propertyName);
+									toggleDialog(false);
+									forceUpdate();
+								}}
+								color="primary"
+							>
+								Hinzufügen
+							</Button>
+						</DialogActions>
+					</Dialog>
 				</div>
 			</Box>
 		);
@@ -187,6 +257,7 @@ export function RenderStatement(stmt?: Statement): ReactNode {
 					<MenuItem value={Operator.FILTER}>Filtern</MenuItem>
 					<MenuItem value={Operator.FIND}>Finden</MenuItem>
 				</Select>
+				<DeleteButton />
 			</div>
 			{content}
 		</Box>
