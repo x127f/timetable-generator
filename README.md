@@ -13,7 +13,7 @@
 -   Name/description
 -   Room types (generic, laboratory, kitchen, office)
 -   Room size/number of places
--   Room occupancy (["xx: xx-xx: xx"])
+-   Room occupancy (["xx:xx - xx:xx"])
 
 ## Time:
 
@@ -34,7 +34,7 @@
 
 ## Action/query:
 
--   Is the resource free? (Teacher, room, class) for a period
+-   Is the resource available? (Teacher, room, class) for a period
 -   Set/give priority
 -   Set hard/soft constraint
 
