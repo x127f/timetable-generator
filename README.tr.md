@@ -32,7 +32,7 @@
 -   Adı
 -   Dersler
 
-## Action/query:
+## Eylem/sorgu:
 
 -   Kaynak (öğretmen, oda, ders) zaman aralığında uygun mu?
 -   Öncelik ayarla
